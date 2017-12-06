@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huifu.virgo.common.mapper.DlqMapper">
+
+	<update id="updateSendMsg" parameterType="com.huifu.virgo.remote.model.SendMsg">
+
+		UPDATE DISPATCHER_SEND_MSG SET ID =ID
+
+		<if test="lastSendResult != null">
+			,LASTSENDRESULT = #{lastSendResult}
+		</if>
+		<if test="lastSendTime != null">
+			,LASTSENDTIME = #{lastSendTime}
+		</if>
+		<if test="sendStat != null">
+			,SENDSTAT = #{sendStat}
+		</if>
+		<if test="reSendCnt != null">
+			,RESENDCNT = #{reSendCnt}
+		</if>
+
+		WHERE ID = #{id}
+
+	</update>
+
+</mapper>

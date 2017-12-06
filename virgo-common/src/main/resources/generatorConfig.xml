@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!-- C:/Users/jun.li/.m2/repository
+    C:/Documents and Settings/alan/.m2/repository/mysql/mysql-connector-java/5.1.9/mysql-connector-java-5.1.9.jar
+    C:/Users/zhiqiang.ma/.m2/repository/com/huifu/jdbc/ojdbc14/10.2.0.4.0/ojdbc14-10.2.0.4.0.jar
+    <classPathEntry
+        location="/Users/tanglq/.m2/repository/mysql/mysql-connector-java/5.1.25/mysql-connector-java-5.1.25.jar"/>
+    -->
+    <classPathEntry
+            location="C:/Users/jianfei.chen/.m2/repository/com/oracle/ojdbc14/10.2.0.4.0/ojdbc14-10.2.0.4.0.jar"/>
+
+    <context id="context1" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+
+        <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@192.168.21.201:1521:orcl" userId="virgo"
+                        password="82jXZp92Av"/>
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，把JDBC DECIMAL 和
+            NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <javaModelGenerator targetPackage="com.huifu.virgo.common.dao.entity"
+                            targetProject="src/main/java"/>
+        <!-- mapper接口存放目录 -->
+        <sqlMapGenerator targetPackage="com.huifu.virgo.common.dao.mapper"
+                         targetProject="src/main/resources"/>
+        <javaClientGenerator targetPackage="com.huifu.virgo.common.dao.mapper"
+                             targetProject="src/main/java" type="XMLMAPPER"/>
+
+        <!-- 配置不生成Exmaple文件 -->
+
+
+        <table tableName="MER_CONF" domainObjectName="MerConfDO" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="ID" sqlStatement="select SEQ_MER_CONF.nextval id from dual"/>
+        </table>
+
+        <table tableName="DISPATCHER_SEND_MSG" domainObjectName="DispatcherSendMsgDO" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="ID" sqlStatement="select SEQ_DISPATCHER_SEND_MSG.nextval id from dual"/>
+        </table>
+
+        <table tableName="INCORRECT_SEND_MSG" domainObjectName="IncorrectSendMsg" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="ID" sqlStatement="select SEQ_INCORRECT_SEND_MSG.nextval id from dual"/>
+        </table>
+
+    </context>
+</generatorConfiguration>

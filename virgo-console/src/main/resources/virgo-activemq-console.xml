@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+
+	<!-- jms config failover:(tcp://192.168.1.230:61616,tcp://192.168.1.219:61616,tcp://remote:61616)?randomize=false&priorityBackup=true -->
+	<!-- a pooling based JMS provider -->
+	<!-- 消息重新投递策略 6秒 12秒 24秒 48秒 96秒 3分钟 ...一直重试6次 -->
+	<bean id="connectionFactoryVirgo" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop">
+		<property name="connectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL">
+					<value>failover:(${message.broker.addr.virgo})?initialReconnectDelay=1000&amp;startupMaxReconnectAttempts=10&amp;timeout=2000&amp;jms.prefetchPolicy.queuePrefetch=0</value>
+				</property>
+				<property name="nonBlockingRedelivery" value="true" />
+				<property name="sendTimeout" value="3000" />
+				<property name="alwaysSyncSend" value="true" />
+				<property name="redeliveryPolicy.useExponentialBackOff"
+					value="true" />
+				<property name="redeliveryPolicy.backOffMultiplier" value="2" /><!-- 
+					重试因子，重试规律为：6s 12s 24s 48s 96s 180s -->
+				<property name="redeliveryPolicy.initialRedeliveryDelay"
+					value="0" />
+				<property name="redeliveryPolicy.redeliveryDelay" value="3000" /><!-- 
+					6秒 -->
+				<property name="redeliveryPolicy.maximumRedeliveries"
+					value="5" /><!-- 6次 -->
+				<property name="redeliveryPolicy.maximumRedeliveryDelay"
+					value="180000" /><!-- 最大3分钟间隔重试 -->
+			</bean>
+		</property>
+		<property name="expiryTimeout" value="1000000" />
+	</bean>
+
+	<!-- Spring JMS Template -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<ref local="connectionFactoryVirgo" />
+		</property>
+	</bean>
+
+	<!-- bean for send message -->
+	<bean id="messageSender" class="com.huifu.virgo.common.sender.MessageSenderImpl">
+		<property name="jmsTemplate" ref="jmsTemplate"></property>
+	</bean>
+
+	<!-- and this is the message listener container -->
+	<bean id="transactionManager"
+		class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="connectionFactoryVirgo" />
+	</bean>
+	
+</beans>

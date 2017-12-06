@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+<!-- 
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="minPoolSize" value="${jdbc.minPoolSize}"/>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
+        <property name="maxIdleTime" value="60"/>
+        <property name="breakAfterAcquireFailure" value="false"/>
+        <property name="idleConnectionTestPeriod" value="60"/>
+        <property name="acquireRetryAttempts" value="30"/>
+        <property name="acquireIncrement" value="5"/>
+        <property name="acquireRetryDelay" value="1000"/>
+        <property name="checkoutTimeout" value="5000"/>
+        <property name="preferredTestQuery" value="SELECT 1"/>
+    </bean> -->
+    
+    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+                <property name="driverClassName" value="${jdbc.driverClassName}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+                <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+                <property name="poolPreparedStatements" value="true"/>
+                <property name= "testWhileIdle" ><value>true</value></property>
+                <property name= "testOnBorrow" ><value>false</value></property>
+                <property name= "testOnReturn" ><value>false</value></property>
+                <property name= "validationQuery" ><value>select 1 from dual</value></property>
+                <property name= "validationQueryTimeout" ><value>1</value></property>
+                <property name= "timeBetweenEvictionRunsMillis" ><value>30000</value></property>
+                <property name= "numTestsPerEvictionRun" ><value>16</value></property>
+        </bean>-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://172.16.103.196:3306/ORCL?characterEncoding=UTF-8"/>
+        <property name="username" value="test"/>
+        <property name="password" value="lincomb99!"/>
+        <property name="maxActive" value="30"/>
+        <property name="poolPreparedStatements" value="true"/>
+        <property name= "testWhileIdle" ><value>true</value></property>
+        <property name= "testOnBorrow" ><value>false</value></property>
+        <property name= "testOnReturn" ><value>false</value></property>
+        <property name= "validationQuery" ><value>select 1 from dual</value></property>
+        <property name= "validationQueryTimeout" ><value>1</value></property>
+        <property name= "timeBetweenEvictionRunsMillis" ><value>30000</value></property>
+        <property name= "numTestsPerEvictionRun" ><value>16</value></property>
+    </bean>
+</beans>

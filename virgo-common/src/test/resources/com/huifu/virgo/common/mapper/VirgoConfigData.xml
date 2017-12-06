@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <VIRGO_CONF
+            ID="1"
+            BLACK_LIST="http://127.0.0.1,http://127.0.0.2"
+            />
+</dataset>

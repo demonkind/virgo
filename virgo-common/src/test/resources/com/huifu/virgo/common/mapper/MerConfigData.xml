@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <MER_CONF
+            ID="1"
+            SYSID=""
+            MERID=""
+            STOPFLAG="1"
+            HTTPTIMEOUT="1000"
+            RETRYMAX="1"
+            RETRYDELAY="1"
+            RETRYBOM="1"
+            MINCONSUMER="1"
+            MAXCONSUMER="1"
+            RESENDMAX="1"
+            CURRENTSTATUS=""
+            CREATEDATE="2014-01-01 12:12:12"
+            URLBLACKLIST="hui.com"
+            URLWHITELIST="abc.com"
+            />
+</dataset>

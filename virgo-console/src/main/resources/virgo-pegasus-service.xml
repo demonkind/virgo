@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+
+	<bean class="com.huifu.pegasus.server.rpc.registry.ServiceRegistry"
+		init-method="init">
+		<property name="port" value="${filter.app.serverPort}" />
+		<property name="services">
+			<map>
+				<entry
+					key="http://service.huifu.com/virgoService/${virgo.console.service}"
+					value-ref="consolePegasusServerImpl" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="consolePegasusServerImpl" class="com.huifu.virgo.console.server.ConsolePegasusServerImpl" />
+
+</beans>

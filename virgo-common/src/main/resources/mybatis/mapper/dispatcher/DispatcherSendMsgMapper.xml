@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huifu.virgo.common.mapper.DispatcherSendMsgMapper">
+
+	<select id="selectById" resultType="com.huifu.virgo.remote.model.SendMsg">
+
+		select * from dispatcher_send_msg where 1=1 and id = #{msgId}
+
+	</select>
+	
+	<select id="selectAllMessageNoPage" resultType="com.huifu.virgo.remote.model.SendMsg">
+
+		select id, sysId, merId, sysTxnId, ordId, sendDate, sendStat,  postData, url
+		from dispatcher_send_msg
+
+		<include refid="where" />
+
+	</select>
+
+
+	<select id="selectAllMessage" resultType="com.huifu.virgo.remote.model.SendMsg">
+
+		select id, sysId, merId, sysTxnId, ordId, sendDate,sendStat, lastSendTime, lastSendResult
+		FROM 
+		(
+			SELECT A.*, ROWNUM RN 
+			FROM (
+				SELECT * FROM DISPATCHER_SEND_MSG
+				WHERE 1=1
+				<if test="form.sendDateS!=null and form.sendDateE!=null">
+					and sendDate <![CDATA[>=]]>
+					#{form.sendDateS} and sendDate <![CDATA[<=]]>
+					#{form.sendDateE}
+				</if>
+				<if test="form.sysId!=null">
+					and sysId = #{form.sysId}
+				</if>
+				<if test="form.merId!=null">
+					and merId = #{form.merId}
+				</if>
+				<if test="form.sysTxnId!=null">
+					and sysTxnId = #{form.sysTxnId}
+				</if>
+				<if test="form.ordId!=null">
+					and ordId = #{form.ordId}
+				</if>
+				<if test="form.sendStat!=null">
+					and sendStat = #{form.sendStat}
+				</if>
+			) A 
+			WHERE ROWNUM <![CDATA[<=]]> #{page.endRows}
+		)
+		WHERE RN <![CDATA[>]]> #{page.startRows}
+			
+	</select>
+
+	<select id="selectAllMessageCount" resultType="int">
+
+		select count(id)
+		from dispatcher_send_msg
+		<include refid="where" />
+
+	</select>
+
+	<sql id="where">
+		where 1=1
+		<if test="form.sendDateS!=null and form.sendDateE!=null">
+			and sendDate <![CDATA[>=]]>
+			#{form.sendDateS} and sendDate <![CDATA[<=]]>
+			#{form.sendDateE}
+		</if>
+		<if test="form.sysId!=null">
+			and sysId = #{form.sysId}
+		</if>
+		<if test="form.merId!=null">
+			and merId = #{form.merId}
+		</if>
+		<if test="form.sysTxnId!=null">
+			and sysTxnId = #{form.sysTxnId}
+		</if>
+		<if test="form.ordId!=null">
+			and ordId = #{form.ordId}
+		</if>
+		<if test="form.sendStat!=null">
+			and sendStat = #{form.sendStat}
+		</if>
+
+	</sql>
+
+	<insert id="insertErrorSendMsg" parameterType="com.huifu.virgo.remote.model.SendMsg">
+		<selectKey keyProperty="id" resultType="java.lang.Long" order="BEFORE">   
+		   <![CDATA[SELECT SEQ_INCORRECT_SEND_MSG.NEXTVAL AS ID FROM DUAL]]>   
+		</selectKey>  
+		INSERT INTO
+		INCORRECT_SEND_MSG
+		(ID, SENDDATE, SYSID, SYSTXNID, TRANSSTAT, MERID,
+		ORDID, URL, POSTDATA,
+		LASTSENDRESULT, LASTSENDTIME, ERRORTYPE,
+		ERRORCREATEDATE, ERRORJSON)
+		VALUES
+		(#{id,jdbcType=NUMERIC}, #{sendDate,jdbcType=VARCHAR}, #{sysId,jdbcType=VARCHAR},
+		#{sysTxnId,jdbcType=VARCHAR},#{transStat,jdbcType=VARCHAR},
+		#{merId,jdbcType=VARCHAR},#{ordId,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},#{postData,jdbcType=VARCHAR},
+		#{lastSendResult,jdbcType=VARCHAR},#{lastSendTime,jdbcType=VARCHAR},
+		#{errorType,jdbcType=NUMERIC},#{errorCreateDate},#{errorJson,jdbcType=VARCHAR})
+	</insert>
+
+
+	<insert id="insertSendMsg" useGeneratedKeys="true" parameterType="com.huifu.virgo.remote.model.SendMsg">
+		<selectKey keyProperty="id" resultType="java.lang.Long" order="BEFORE">   
+		   <![CDATA[SELECT SEQ_DISPATCHER_SEND_MSG.NEXTVAL AS ID FROM DUAL]]>   
+		</selectKey>  
+		INSERT INTO
+		DISPATCHER_SEND_MSG
+		(ID, SENDDATE, SYSID,
+		SYSTXNID, TRANSSTAT,
+		MERID,
+		ORDID, URL, POSTDATA,
+		LASTSENDRESULT,
+		LASTSENDTIME,SENDSTAT, DATAJSON)
+		VALUES
+		(#{id,jdbcType=NUMERIC}, #{sendDate,jdbcType=VARCHAR}, #{sysId,jdbcType=VARCHAR},
+		#{sysTxnId,jdbcType=VARCHAR},#{transStat,jdbcType=VARCHAR},
+		#{merId,jdbcType=VARCHAR},#{ordId,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},
+		#{postData,jdbcType=VARCHAR},#{lastSendResult,jdbcType=VARCHAR},
+		#{lastSendTime,jdbcType=VARCHAR},#{sendStat,jdbcType=VARCHAR},#{dataJson,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateStatBySysIdAndMerId">
+		UPDATE DISPATCHER_SEND_MSG SET SENDSTAT = #{toStat}
+		WHERE SYSID = #{sysId} AND MERID = #{merId} AND SENDSTAT = #{fromStat}
+	</update>
+
+</mapper>

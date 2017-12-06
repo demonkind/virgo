@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huifu.virgo.common.mapper.MerconfMapper">
+
+
+    <select id="existMerConf" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM MER_CONF WHERE SYSID=#{sysId} and merId=#{merId}
+    </select>
+    <delete id="deleteMerConf">
+        DELETE FROM MER_CONF WHERE SYSID=#{sysId} and merId=#{merId}
+    </delete>
+    <select id="selectMerConf" resultType="com.huifu.virgo.remote.model.MerConfiguration">
+        select *
+        from MER_CONF
+        where SYSID=#{sysId} and merId=#{merId}
+    </select>
+    <select id="getMerConfList" resultType="com.huifu.virgo.remote.model.MerConfiguration" >
+        select *
+        from MER_CONF
+    </select>
+
+    <delete id="deleteOneConf" parameterType="int">
+
+		DELETE FROM MER_CONF WHERE ID = #{id}
+
+	</delete>
+
+    <select id="selectAllMerconf" resultType="com.huifu.virgo.remote.model.MerConfiguration">
+
+        select *
+        FROM
+        (
+            SELECT A.*, ROWNUM RN
+            FROM (
+            SELECT * FROM MER_CONF
+            WHERE 1=1
+            <if test="form.sysId!=null and form.sysId!=''">
+                AND SYSID = #{form.sysId}
+            </if>
+            <if test="form.merId!=null and form.merId!=''">
+                AND MERID = #{form.merId}
+            </if>
+        ) A
+        WHERE ROWNUM <![CDATA[<=]]> #{page.endRows}
+        )
+        WHERE RN <![CDATA[>]]> #{page.startRows}
+
+
+
+    </select>
+
+    <select id="selectAllMerconfCount"  parameterType="com.huifu.virgo.remote.model.MerConfiguration" resultType="int">
+        SELECT count(1) FROM MER_CONF
+        WHERE 1=1
+        <if test="form.sysId!=null and form.sysId!=''">
+            AND SYSID = #{form.sysId}
+        </if>
+        <if test="form.merId!=null and form.merId!=''">
+            AND MERID = #{form.merId}
+        </if>
+    </select>
+
+
+
+    <select id="selectOneMerConf" parameterType="int"
+            resultType="com.huifu.virgo.remote.model.MerConfiguration">
+		SELECT * FROM
+		MER_CONF WHERE ID = #{id}
+	</select>
+
+    <insert id="createOneConf" parameterType="com.huifu.virgo.remote.model.MerConfiguration">
+        <selectKey keyProperty="id" resultType="java.lang.Long" order="BEFORE">
+            <![CDATA[SELECT SEQ_MER_CONF.NEXTVAL AS ID FROM DUAL]]>
+        </selectKey>
+        INSERT INTO
+        MER_CONF
+        (ID, SYSID, MERID,
+        STOPFLAG, HTTPTIMEOUT,
+        RETRYMAX,
+        RETRYDELAY, RETRYBOM,
+        MINCONSUMER,
+        MAXCONSUMER,
+        RESENDMAX,CURRENTSTATUS, CREATEDATE,URLBLACKLIST,URLWHITELIST)
+        VALUES
+        (#{id,jdbcType=NUMERIC}, #{form.sysId,jdbcType=VARCHAR}, #{form.merId,jdbcType=VARCHAR},
+        #{form.stopFlag,jdbcType=NUMERIC},#{form.httpTimeout,jdbcType=NUMERIC},
+        #{form.retryMax,jdbcType=NUMERIC},#{form.retryDelay,jdbcType=NUMERIC},
+        #{form.retryBom,jdbcType=NUMERIC},#{form.minConsumer,jdbcType=NUMERIC},#{form.maxConsumer,jdbcType=NUMERIC},
+        #{form.resendMax,jdbcType=NUMERIC},#{form.currentStatus,jdbcType=VARCHAR},
+        sysdate,#{form.urlblacklist,jdbcType=VARCHAR},#{form.urlwhitelist,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateConf" parameterType="com.huifu.virgo.remote.model.MerConfiguration">
+
+        UPDATE MER_CONF SET ID = ID
+
+        <if test="form.sysId != null">
+            ,SYSID = #{form.sysId}
+        </if>
+        <if test="form.merId != null">
+            ,MERID = #{form.merId}
+        </if>
+        <if test="form.stopFlag != null">
+            ,STOPFLAG = #{form.stopFlag}
+        </if>
+        <if test="form.httpTimeout != null">
+            ,HTTPTIMEOUT = #{form.httpTimeout}
+        </if>
+        <if test="form.retryMax != null">
+            ,RETRYMAX = #{form.retryMax}
+        </if>
+        <if test="form.retryDelay != null">
+            ,RETRYDELAY = #{form.retryDelay}
+        </if>
+        <if test="form.retryBom != null">
+            ,RETRYBOM = #{form.retryBom}
+        </if>
+        <if test="form.minConsumer != null">
+            ,MINCONSUMER = #{form.minConsumer}
+        </if>
+        <if test="form.maxConsumer != null">
+            ,MAXCONSUMER = #{form.maxConsumer}
+        </if>
+        <if test="form.resendMax != null">
+            ,RESENDMAX = #{form.resendMax}
+        </if>
+        <if test="form.currentStatus != null">
+            ,CURRENTSTATUS = #{form.currentStatus}
+        </if>
+        <if test="form.urlblacklist != null">
+            ,URLBLACKLIST = #{form.urlblacklist}
+        </if>
+        <if test="form.urlwhitelist != null">
+            ,URLWHITELIST = #{form.urlwhitelist}
+        </if>
+        WHERE ID = #{form.id}
+
+    </update>
+
+</mapper>
